@@ -22,6 +22,7 @@ Sexpander is a JUCE audio plugin (VST) that controls audio levels according to s
 - Use JUCE naming conventions (camelCase for methods, PascalCase for classes)
 - Split interface (header) and implementation (cpp)
 - Each class should have its own files
+- Trivial methods should stay in header
 
 ## Commit Messages
 

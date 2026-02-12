@@ -9,13 +9,7 @@ PluginProcessor::PluginProcessor()
 {
 }
 
-PluginProcessor::~PluginProcessor() = default;
-
 void PluginProcessor::prepareToPlay(double /*sampleRate*/, int /*samplesPerBlock*/)
-{
-}
-
-void PluginProcessor::releaseResources()
 {
 }
 
@@ -45,21 +39,6 @@ juce::AudioProcessorEditor* PluginProcessor::createEditor()
 {
     return new PluginEditor(*this);
 }
-
-bool PluginProcessor::hasEditor() const { return true; }
-
-const juce::String PluginProcessor::getName() const { return JucePlugin_Name; }
-
-bool PluginProcessor::acceptsMidi() const { return false; }
-bool PluginProcessor::producesMidi() const { return false; }
-bool PluginProcessor::isMidiEffect() const { return false; }
-double PluginProcessor::getTailLengthSeconds() const { return 0.0; }
-
-int PluginProcessor::getNumPrograms() { return 1; }
-int PluginProcessor::getCurrentProgram() { return 0; }
-void PluginProcessor::setCurrentProgram(int /*index*/) {}
-const juce::String PluginProcessor::getProgramName(int /*index*/) { return {}; }
-void PluginProcessor::changeProgramName(int /*index*/, const juce::String& /*newName*/) {}
 
 void PluginProcessor::getStateInformation(juce::MemoryBlock& /*destData*/)
 {

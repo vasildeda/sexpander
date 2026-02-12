@@ -7,8 +7,6 @@ PluginEditor::PluginEditor(PluginProcessor& p)
     setSize(600, 400);
 }
 
-PluginEditor::~PluginEditor() = default;
-
 void PluginEditor::paint(juce::Graphics& g)
 {
     g.fillAll(juce::Colours::black);
