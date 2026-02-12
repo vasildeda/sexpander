@@ -17,11 +17,8 @@ float GainComputer::process(float rms)
     auto rat = ratio_.load();
     auto minDb = minGain_.load();
     auto maxDb = maxGain_.load();
-    float targetGainDb = 0.0f;
-    if (rmsDb < thresh)
-        targetGainDb = (thresh - rmsDb) * (1.0f - rat);
 
-    targetGainDb = std::clamp(targetGainDb, minDb, maxDb);
+    auto targetGainDb = std::clamp((rmsDb - thresh) * (rat - 1.0f), minDb, maxDb);
 
     auto diff = targetGainDb - currentGainDb_;
     auto slew = (diff < 0.0f)
