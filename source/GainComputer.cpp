@@ -1,4 +1,4 @@
-#include "GainComputer.h"
+ #include "GainComputer.h"
 
 #include <algorithm>
 
@@ -13,12 +13,11 @@ float GainComputer::process(float rms)
     constexpr float epsilon = 1e-10f;
     auto rmsDb = 20.0f * std::log10(std::max(rms, epsilon));
 
-    auto thresh = threshold_.load();
     auto rat = ratio_.load();
     auto minDb = minGain_.load();
     auto maxDb = maxGain_.load();
 
-    auto targetGainDb = std::clamp((rmsDb - thresh) * (rat - 1.0f), minDb, maxDb);
+    auto targetGainDb = std::clamp(rmsDb * (rat - 1.0f), minDb, maxDb);
 
     auto diff = targetGainDb - currentGainDb_;
     auto slew = (diff < 0.0f)
@@ -33,11 +32,6 @@ float GainComputer::process(float rms)
         currentGainDb_ = targetGainDb;
 
     return std::pow(10.0f, currentGainDb_ / 20.0f);
-}
-
-void GainComputer::setThreshold(float dB)
-{
-    threshold_.store(dB);
 }
 
 void GainComputer::setRatio(float ratio)

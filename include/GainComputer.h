@@ -8,7 +8,6 @@ public:
     void prepare(double sampleRate);
     float process(float rms);
 
-    void setThreshold(float dB);
     void setRatio(float ratio);
     void setDownwardSlewRate(float dBPerSecond);
     void setUpwardSlewRate(float dBPerSecond);
@@ -16,7 +15,6 @@ public:
     void setMaxGain(float dB);
 
 private:
-    std::atomic<float> threshold_{-40.0f};
     std::atomic<float> ratio_{2.0f};
     std::atomic<float> downwardSlewRate_{10000.0f};
     std::atomic<float> upwardSlewRate_{10000.0f};
