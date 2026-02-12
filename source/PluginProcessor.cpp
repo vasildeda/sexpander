@@ -44,21 +44,23 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
 
+    auto sidechainBuffer = getBusBuffer(buffer, true, 1);
+    auto numSidechainChannels = sidechainBuffer.getNumChannels();
     auto numSamples = buffer.getNumSamples();
-    auto* sidechainBus = getBus(true, 1);
 
-    if (sidechainBus != nullptr && sidechainBus->isEnabled())
+    if (numSidechainChannels > 0)
     {
-        auto sidechainOffset = getBusBuffer(buffer, true, 1).getNumChannels() > 0
-                                   ? getChannelIndexInProcessBlockBuffer(true, 1, 0)
-                                   : -1;
-
-        if (sidechainOffset >= 0)
+        for (int i = 0; i < numSamples; ++i)
         {
-            auto* sidechainData = buffer.getReadPointer(sidechainOffset);
+            auto sumOfSquares = 0.0f;
 
-            for (int i = 0; i < numSamples; ++i)
-                circularBuffer_.push(sidechainData[i]);
+            for (int ch = 0; ch < numSidechainChannels; ++ch)
+            {
+                auto sample = sidechainBuffer.getSample(ch, i);
+                sumOfSquares += sample * sample;
+            }
+
+            circularBuffer_.push(std::sqrt(sumOfSquares / static_cast<float>(numSidechainChannels)));
         }
     }
 }
