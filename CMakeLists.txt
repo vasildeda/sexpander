@@ -31,6 +31,7 @@ juce_add_plugin(Sexpander
 # Add source files
 target_sources(Sexpander PRIVATE
     source/CircularBuffer.cpp
+    source/GainComputer.cpp
     source/PluginProcessor.cpp
     source/PluginEditor.cpp
 )

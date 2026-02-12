@@ -9,9 +9,11 @@ PluginProcessor::PluginProcessor()
 {
 }
 
-void PluginProcessor::prepareToPlay(double /*sampleRate*/, int /*samplesPerBlock*/)
+void PluginProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/)
 {
     circularBuffer_.clear();
+    circularBuffer_.setSize(defaultRmsWindowSize_);
+    gainComputer_.prepare(sampleRate);
 }
 
 bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
@@ -48,6 +50,9 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
     auto numSidechainChannels = sidechainBuffer.getNumChannels();
     auto numSamples = buffer.getNumSamples();
 
+    auto mainBuffer = getBusBuffer(buffer, false, 0);
+    auto numMainChannels = mainBuffer.getNumChannels();
+
     if (numSidechainChannels > 0)
     {
         for (int i = 0; i < numSamples; ++i)
@@ -61,6 +66,11 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
             }
 
             circularBuffer_.push(std::sqrt(sumOfSquares / static_cast<float>(numSidechainChannels)));
+
+            auto gain = gainComputer_.process(circularBuffer_.getRms());
+
+            for (int ch = 0; ch < numMainChannels; ++ch)
+                mainBuffer.setSample(ch, i, mainBuffer.getSample(ch, i) * gain);
         }
     }
 }

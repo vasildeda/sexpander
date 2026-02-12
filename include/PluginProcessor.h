@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CircularBuffer.h"
+#include "GainComputer.h"
 #include <juce_audio_processors/juce_audio_processors.h>
 
 class PluginProcessor : public juce::AudioProcessor
@@ -39,7 +40,9 @@ public:
 
 private:
     static constexpr int maxRmsWindowSize_ = 48000;
+    static constexpr int defaultRmsWindowSize_ = 4800;
     CircularBuffer circularBuffer_{maxRmsWindowSize_};
+    GainComputer gainComputer_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 };
