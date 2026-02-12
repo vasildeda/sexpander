@@ -16,10 +16,19 @@ void PluginProcessor::prepareToPlay(double /*sampleRate*/, int /*samplesPerBlock
 
 bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
 {
-    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+    auto mainIn = layouts.getMainInputChannelSet();
+    auto mainOut = layouts.getMainOutputChannelSet();
+
+    if (mainIn != mainOut)
         return false;
 
-    if (layouts.getMainInputChannelSet() != juce::AudioChannelSet::stereo())
+    if (mainIn != juce::AudioChannelSet::mono()
+        && mainIn != juce::AudioChannelSet::stereo())
+        return false;
+
+    auto sidechain = layouts.getChannelSet(true, 1);
+    if (sidechain != juce::AudioChannelSet::mono()
+        && sidechain != juce::AudioChannelSet::stereo())
         return false;
 
     return true;
