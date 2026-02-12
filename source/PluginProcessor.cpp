@@ -11,6 +11,7 @@ PluginProcessor::PluginProcessor()
 
 void PluginProcessor::prepareToPlay(double /*sampleRate*/, int /*samplesPerBlock*/)
 {
+    circularBuffer_.clear();
 }
 
 bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
@@ -33,6 +34,24 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
+
+    auto numSamples = buffer.getNumSamples();
+    auto* sidechainBus = getBus(true, 1);
+
+    if (sidechainBus != nullptr && sidechainBus->isEnabled())
+    {
+        auto sidechainOffset = getBusBuffer(buffer, true, 1).getNumChannels() > 0
+                                   ? getChannelIndexInProcessBlockBuffer(true, 1, 0)
+                                   : -1;
+
+        if (sidechainOffset >= 0)
+        {
+            auto* sidechainData = buffer.getReadPointer(sidechainOffset);
+
+            for (int i = 0; i < numSamples; ++i)
+                circularBuffer_.push(sidechainData[i]);
+        }
+    }
 }
 
 juce::AudioProcessorEditor* PluginProcessor::createEditor()

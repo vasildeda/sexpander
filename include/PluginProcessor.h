@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CircularBuffer.h"
 #include <juce_audio_processors/juce_audio_processors.h>
 
 class PluginProcessor : public juce::AudioProcessor
@@ -34,6 +35,11 @@ public:
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
 
+    CircularBuffer& getCircularBuffer() { return circularBuffer_; }
+
 private:
+    static constexpr int maxRmsWindowSize_ = 48000;
+    CircularBuffer circularBuffer_{maxRmsWindowSize_};
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 };
