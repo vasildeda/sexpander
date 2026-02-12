@@ -1,0 +1,1 @@
+/Users/vasil/Documents/Vývoj/juce_workspace/13_Sixpander_JUCE_8/libs/juce/build/extras/AudioPluginHost/AudioPluginHost_artefacts/AudioPluginHost.app
