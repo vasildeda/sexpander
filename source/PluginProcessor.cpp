@@ -28,17 +28,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParam
         juce::NormalisableRange<float>(0.1f, 4.0f, 0.01f, 1.0f),
         1.0f));
 
-    auto slewRange = juce::NormalisableRange<float>(100.0f, 50000.0f, 0.0f, 0.3f);
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+        juce::ParameterID{"attack", 1}, "Attack",
+        juce::NormalisableRange<float>(1.0f, 100.0f, 1.0f, 1.0f),
+        1.0f, juce::AudioParameterFloatAttributes().withLabel("ms")));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        juce::ParameterID{"downwardSlew", 1}, "Release",
-        slewRange, 10000.0f,
-        juce::AudioParameterFloatAttributes().withLabel("dB/s")));
-
-    layout.add(std::make_unique<juce::AudioParameterFloat>(
-        juce::ParameterID{"upwardSlew", 1}, "Attack",
-        slewRange, 10000.0f,
-        juce::AudioParameterFloatAttributes().withLabel("dB/s")));
+        juce::ParameterID{"release", 1}, "Release",
+        juce::NormalisableRange<float>(1.0f, 1000.0f, 1.0f, 0.3f),
+        100.0f, juce::AudioParameterFloatAttributes().withLabel("ms")));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"minGain", 1}, "Min Gain",
@@ -102,8 +100,8 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
     gainComputer_.setRmsMin(apvts_.getRawParameterValue("rmsMin")->load());
     gainComputer_.setRmsMax(apvts_.getRawParameterValue("rmsMax")->load());
     gainComputer_.setCurve(apvts_.getRawParameterValue("curve")->load());
-    gainComputer_.setDownwardSlewRate(apvts_.getRawParameterValue("downwardSlew")->load());
-    gainComputer_.setUpwardSlewRate(apvts_.getRawParameterValue("upwardSlew")->load());
+    gainComputer_.setAttackMs(apvts_.getRawParameterValue("attack")->load());
+    gainComputer_.setReleaseMs(apvts_.getRawParameterValue("release")->load());
     gainComputer_.setMinGain(apvts_.getRawParameterValue("minGain")->load());
     gainComputer_.setMaxGain(apvts_.getRawParameterValue("maxGain")->load());
 

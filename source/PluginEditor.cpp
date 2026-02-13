@@ -18,8 +18,8 @@ PluginEditor::PluginEditor(PluginProcessor& p)
     rmsMinAttachment_ = std::make_unique<SliderAttachment>(apvts, "rmsMin", rmsMinSlider_);
     rmsMaxAttachment_ = std::make_unique<SliderAttachment>(apvts, "rmsMax", rmsMaxSlider_);
     curveAttachment_ = std::make_unique<SliderAttachment>(apvts, "curve", curveSlider_);
-    downwardSlewAttachment_ = std::make_unique<SliderAttachment>(apvts, "downwardSlew", downwardSlewSlider_);
-    upwardSlewAttachment_ = std::make_unique<SliderAttachment>(apvts, "upwardSlew", upwardSlewSlider_);
+    downwardSlewAttachment_ = std::make_unique<SliderAttachment>(apvts, "release", downwardSlewSlider_);
+    upwardSlewAttachment_ = std::make_unique<SliderAttachment>(apvts, "attack", upwardSlewSlider_);
     minGainAttachment_ = std::make_unique<SliderAttachment>(apvts, "minGain", minGainSlider_);
     maxGainAttachment_ = std::make_unique<SliderAttachment>(apvts, "maxGain", maxGainSlider_);
     rmsWindowAttachment_ = std::make_unique<SliderAttachment>(apvts, "rmsWindow", rmsWindowSlider_);
@@ -62,6 +62,6 @@ void PluginEditor::resized()
 
     minGainSlider_.setBounds(bottomRow.removeFromLeft(sliderWidth));
     maxGainSlider_.setBounds(bottomRow.removeFromLeft(sliderWidth));
-    downwardSlewSlider_.setBounds(bottomRow.removeFromLeft(sliderWidth));
-    upwardSlewSlider_.setBounds(bottomRow);
+    upwardSlewSlider_.setBounds(bottomRow.removeFromLeft(sliderWidth));
+    downwardSlewSlider_.setBounds(bottomRow);
 }

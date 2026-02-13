@@ -30,16 +30,10 @@ float GainComputer::process(float rms)
     auto targetGainDb = minDb + t * (maxDb - minDb);
 
     auto diff = targetGainDb - currentGainDb_;
-    auto slew = (diff < 0.0f)
-        ? downwardSlewRate_.load() / static_cast<float>(sampleRate_)
-        : upwardSlewRate_.load() / static_cast<float>(sampleRate_);
+    auto timeMs = (diff > 0.0f) ? attackMs_.load() : releaseMs_.load();
+    auto coeff = 1.0f - std::exp(-1000.0f / (timeMs * static_cast<float>(sampleRate_)));
 
-    if (diff > slew)
-        currentGainDb_ += slew;
-    else if (diff < -slew)
-        currentGainDb_ -= slew;
-    else
-        currentGainDb_ = targetGainDb;
+    currentGainDb_ += coeff * diff;
 
     return std::pow(10.0f, currentGainDb_ / 20.0f);
 }
@@ -59,14 +53,14 @@ void GainComputer::setRmsMax(float dB)
     rmsMax_.store(dB);
 }
 
-void GainComputer::setDownwardSlewRate(float dBPerSecond)
+void GainComputer::setAttackMs(float ms)
 {
-    downwardSlewRate_.store(dBPerSecond);
+    attackMs_.store(ms);
 }
 
-void GainComputer::setUpwardSlewRate(float dBPerSecond)
+void GainComputer::setReleaseMs(float ms)
 {
-    upwardSlewRate_.store(dBPerSecond);
+    releaseMs_.store(ms);
 }
 
 void GainComputer::setMinGain(float dB)
