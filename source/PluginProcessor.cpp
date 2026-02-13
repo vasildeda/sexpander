@@ -42,7 +42,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParam
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"rmsWindow", 1}, "RMS Window",
-        juce::NormalisableRange<float>(1.0f, 1000.0f, 0.0f, 0.3f),
+        juce::NormalisableRange<float>(1.0f, 1000.0f, 1.0f, 0.3f),
         100.0f, juce::AudioParameterFloatAttributes().withLabel("ms")));
 
     return layout;
