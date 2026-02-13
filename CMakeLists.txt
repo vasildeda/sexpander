@@ -24,9 +24,9 @@ juce_add_plugin(Sexpander
 )
 
 # Add resources
-#juce_add_binary_data(BinaryResources SOURCES
-#    resources/background.svg
-#)
+juce_add_binary_data(BinaryResources SOURCES
+    resources/background.svg
+)
 
 # Add source files
 target_sources(Sexpander PRIVATE
@@ -44,6 +44,7 @@ target_include_directories(Sexpander PRIVATE
 
 # Add JUCE modules
 target_link_libraries(Sexpander PRIVATE
+    BinaryResources
     juce::juce_audio_basics
     juce::juce_audio_devices
     juce::juce_audio_formats

@@ -1,4 +1,5 @@
 #include "PluginEditor.h"
+#include "BinaryData.h"
 
 PluginEditor::PluginEditor(PluginProcessor& p)
     : AudioProcessorEditor(p),
@@ -14,6 +15,9 @@ PluginEditor::PluginEditor(PluginProcessor& p)
     setupSlider(minGainSlider_, minGainLabel_, "Min Gain");
     setupSlider(maxGainSlider_, maxGainLabel_, "Max Gain");
     setupSlider(rmsWindowSlider_, rmsWindowLabel_, "RMS Window");
+
+    background_ = juce::Drawable::createFromImageData(BinaryData::background_svg,
+                                                      BinaryData::background_svgSize);
 
     rmsMinAttachment_ = std::make_unique<SliderAttachment>(apvts, "rmsMin", rmsMinSlider_);
     rmsMaxAttachment_ = std::make_unique<SliderAttachment>(apvts, "rmsMax", rmsMaxSlider_);
@@ -41,7 +45,11 @@ void PluginEditor::setupSlider(juce::Slider& slider, juce::Label& label, const j
 
 void PluginEditor::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colours::black);
+    if (background_ != nullptr)
+        background_->drawWithin(g, getLocalBounds().toFloat(),
+                                juce::RectanglePlacement::stretchToFit, 1.0f);
+    else
+        g.fillAll(juce::Colours::black);
 }
 
 void PluginEditor::resized()

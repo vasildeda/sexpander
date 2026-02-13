@@ -27,6 +27,8 @@ private:
         downwardSlewAttachment_, upwardSlewAttachment_,
         minGainAttachment_, maxGainAttachment_, rmsWindowAttachment_;
 
+    std::unique_ptr<juce::Drawable> background_;
+
     void setupSlider(juce::Slider&, juce::Label&, const juce::String& text);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
