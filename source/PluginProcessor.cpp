@@ -16,7 +16,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParam
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"rmsMin", 1}, "RMS Min",
         juce::NormalisableRange<float>(-80.0f, 0.0f, 1.0f, 1.0f),
-        -60.0f, juce::AudioParameterFloatAttributes().withLabel("dB")));
+        -80.0f, juce::AudioParameterFloatAttributes().withLabel("dB")));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"rmsMax", 1}, "RMS Max",
@@ -25,7 +25,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParam
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"curve", 1}, "Curve",
-        juce::NormalisableRange<float>(0.1f, 4.0f, 0.0f, 1.0f),
+        juce::NormalisableRange<float>(0.1f, 4.0f, 0.01f, 1.0f),
         1.0f));
 
     auto slewRange = juce::NormalisableRange<float>(100.0f, 50000.0f, 0.0f, 0.3f);
@@ -53,7 +53,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParam
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"rmsWindow", 1}, "RMS Window",
         juce::NormalisableRange<float>(1.0f, 1000.0f, 1.0f, 0.3f),
-        100.0f, juce::AudioParameterFloatAttributes().withLabel("ms")));
+        10.0f, juce::AudioParameterFloatAttributes().withLabel("ms")));
 
     return layout;
 }
