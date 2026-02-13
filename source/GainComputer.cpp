@@ -1,6 +1,7 @@
- #include "GainComputer.h"
+#include "GainComputer.h"
 
 #include <algorithm>
+#include <cmath>
 
 void GainComputer::prepare(double sampleRate)
 {
@@ -13,11 +14,20 @@ float GainComputer::process(float rms)
     constexpr float epsilon = 1e-10f;
     auto rmsDb = 20.0f * std::log10(std::max(rms, epsilon));
 
-    auto rat = ratio_.load();
+    auto rmsMinDb = rmsMin_.load();
+    auto rmsMaxDb = rmsMax_.load();
     auto minDb = minGain_.load();
     auto maxDb = maxGain_.load();
+    auto cur = curve_.load();
 
-    auto targetGainDb = std::clamp(rmsDb * (rat - 1.0f), minDb, maxDb);
+    auto range = rmsMaxDb - rmsMinDb;
+    auto t = (range > 0.0f)
+        ? std::clamp((rmsDb - rmsMinDb) / range, 0.0f, 1.0f)
+        : (rmsDb >= rmsMaxDb ? 1.0f : 0.0f);
+
+    t = std::pow(t, cur);
+
+    auto targetGainDb = minDb + t * (maxDb - minDb);
 
     auto diff = targetGainDb - currentGainDb_;
     auto slew = (diff < 0.0f)
@@ -34,9 +44,19 @@ float GainComputer::process(float rms)
     return std::pow(10.0f, currentGainDb_ / 20.0f);
 }
 
-void GainComputer::setRatio(float ratio)
+void GainComputer::setCurve(float curve)
 {
-    ratio_.store(ratio);
+    curve_.store(curve);
+}
+
+void GainComputer::setRmsMin(float dB)
+{
+    rmsMin_.store(dB);
+}
+
+void GainComputer::setRmsMax(float dB)
+{
+    rmsMax_.store(dB);
 }
 
 void GainComputer::setDownwardSlewRate(float dBPerSecond)

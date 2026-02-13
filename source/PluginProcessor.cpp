@@ -14,9 +14,19 @@ juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParam
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        juce::ParameterID{"ratio", 1}, "Ratio",
-        juce::NormalisableRange<float>(1.0f, 8.0f, 0.0f, 1.0f),
-        2.0f, juce::AudioParameterFloatAttributes().withLabel(":1")));
+        juce::ParameterID{"rmsMin", 1}, "RMS Min",
+        juce::NormalisableRange<float>(-80.0f, 0.0f, 1.0f, 1.0f),
+        -60.0f, juce::AudioParameterFloatAttributes().withLabel("dB")));
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+        juce::ParameterID{"rmsMax", 1}, "RMS Max",
+        juce::NormalisableRange<float>(-80.0f, 0.0f, 1.0f, 1.0f),
+        -6.0f, juce::AudioParameterFloatAttributes().withLabel("dB")));
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+        juce::ParameterID{"curve", 1}, "Curve",
+        juce::NormalisableRange<float>(0.1f, 4.0f, 0.0f, 1.0f),
+        1.0f));
 
     auto slewRange = juce::NormalisableRange<float>(100.0f, 50000.0f, 0.0f, 0.3f);
 
@@ -89,7 +99,9 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
 
-    gainComputer_.setRatio(apvts_.getRawParameterValue("ratio")->load());
+    gainComputer_.setRmsMin(apvts_.getRawParameterValue("rmsMin")->load());
+    gainComputer_.setRmsMax(apvts_.getRawParameterValue("rmsMax")->load());
+    gainComputer_.setCurve(apvts_.getRawParameterValue("curve")->load());
     gainComputer_.setDownwardSlewRate(apvts_.getRawParameterValue("downwardSlew")->load());
     gainComputer_.setUpwardSlewRate(apvts_.getRawParameterValue("upwardSlew")->load());
     gainComputer_.setMinGain(apvts_.getRawParameterValue("minGain")->load());

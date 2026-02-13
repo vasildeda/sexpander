@@ -6,14 +6,18 @@ PluginEditor::PluginEditor(PluginProcessor& p)
 {
     auto& apvts = audioProcessor_.getApvts();
 
-    setupSlider(ratioSlider_, ratioLabel_, "Ratio");
+    setupSlider(rmsMinSlider_, rmsMinLabel_, "RMS Min");
+    setupSlider(rmsMaxSlider_, rmsMaxLabel_, "RMS Max");
+    setupSlider(curveSlider_, curveLabel_, "Curve");
     setupSlider(downwardSlewSlider_, downwardSlewLabel_, "Down Slew");
     setupSlider(upwardSlewSlider_, upwardSlewLabel_, "Up Slew");
     setupSlider(minGainSlider_, minGainLabel_, "Min Gain");
     setupSlider(maxGainSlider_, maxGainLabel_, "Max Gain");
     setupSlider(rmsWindowSlider_, rmsWindowLabel_, "RMS Window");
 
-    ratioAttachment_ = std::make_unique<SliderAttachment>(apvts, "ratio", ratioSlider_);
+    rmsMinAttachment_ = std::make_unique<SliderAttachment>(apvts, "rmsMin", rmsMinSlider_);
+    rmsMaxAttachment_ = std::make_unique<SliderAttachment>(apvts, "rmsMax", rmsMaxSlider_);
+    curveAttachment_ = std::make_unique<SliderAttachment>(apvts, "curve", curveSlider_);
     downwardSlewAttachment_ = std::make_unique<SliderAttachment>(apvts, "downwardSlew", downwardSlewSlider_);
     upwardSlewAttachment_ = std::make_unique<SliderAttachment>(apvts, "upwardSlew", upwardSlewSlider_);
     minGainAttachment_ = std::make_unique<SliderAttachment>(apvts, "minGain", minGainSlider_);
@@ -49,13 +53,15 @@ void PluginEditor::resized()
     auto bottomRow = area;
     bottomRow.removeFromTop(labelHeight);
 
-    auto sliderWidth = topRow.getWidth() / 3;
+    auto topSliderWidth = topRow.getWidth() / 4;
+    rmsMinSlider_.setBounds(topRow.removeFromLeft(topSliderWidth));
+    rmsMaxSlider_.setBounds(topRow.removeFromLeft(topSliderWidth));
+    minGainSlider_.setBounds(topRow.removeFromLeft(topSliderWidth));
+    maxGainSlider_.setBounds(topRow);
 
-    ratioSlider_.setBounds(topRow.removeFromLeft(sliderWidth));
-    downwardSlewSlider_.setBounds(topRow.removeFromLeft(sliderWidth));
-    upwardSlewSlider_.setBounds(topRow);
-
-    minGainSlider_.setBounds(bottomRow.removeFromLeft(sliderWidth));
-    maxGainSlider_.setBounds(bottomRow.removeFromLeft(sliderWidth));
+    auto bottomSliderWidth = bottomRow.getWidth() / 4;
+    curveSlider_.setBounds(bottomRow.removeFromLeft(bottomSliderWidth));
+    downwardSlewSlider_.setBounds(bottomRow.removeFromLeft(bottomSliderWidth));
+    upwardSlewSlider_.setBounds(bottomRow.removeFromLeft(bottomSliderWidth));
     rmsWindowSlider_.setBounds(bottomRow);
 }

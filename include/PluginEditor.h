@@ -17,12 +17,15 @@ private:
 
     PluginProcessor& audioProcessor_;
 
-    juce::Slider ratioSlider_, downwardSlewSlider_, upwardSlewSlider_,
+    juce::Slider rmsMinSlider_, rmsMaxSlider_, curveSlider_,
+                 downwardSlewSlider_, upwardSlewSlider_,
                  minGainSlider_, maxGainSlider_, rmsWindowSlider_;
-    juce::Label ratioLabel_, downwardSlewLabel_, upwardSlewLabel_,
+    juce::Label rmsMinLabel_, rmsMaxLabel_, curveLabel_,
+                downwardSlewLabel_, upwardSlewLabel_,
                 minGainLabel_, maxGainLabel_, rmsWindowLabel_;
-    std::unique_ptr<SliderAttachment> ratioAttachment_, downwardSlewAttachment_,
-        upwardSlewAttachment_, minGainAttachment_, maxGainAttachment_, rmsWindowAttachment_;
+    std::unique_ptr<SliderAttachment> rmsMinAttachment_, rmsMaxAttachment_, curveAttachment_,
+        downwardSlewAttachment_, upwardSlewAttachment_,
+        minGainAttachment_, maxGainAttachment_, rmsWindowAttachment_;
 
     void setupSlider(juce::Slider&, juce::Label&, const juce::String& text);
 
