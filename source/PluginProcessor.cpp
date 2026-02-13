@@ -37,7 +37,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParam
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"maxGain", 1}, "Max Gain",
-        juce::NormalisableRange<float>(-40.0f, 12.0f, 0.0f, 1.0f),
+        juce::NormalisableRange<float>(-6.0f, 12.0f, 0.0f, 1.0f),
         0.0f, juce::AudioParameterFloatAttributes().withLabel("dB")));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
