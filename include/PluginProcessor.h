@@ -37,8 +37,12 @@ public:
     void setStateInformation(const void* data, int sizeInBytes) override;
 
     CircularBuffer& getCircularBuffer() { return circularBuffer_; }
+    juce::AudioProcessorValueTreeState& getApvts() { return apvts_; }
+
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
 private:
+    juce::AudioProcessorValueTreeState apvts_{*this, nullptr, "Parameters", createParameterLayout()};
     static constexpr int maxRmsWindowSize_ = 48000;
     static constexpr int defaultRmsWindowSize_ = 4800;
     CircularBuffer circularBuffer_{maxRmsWindowSize_};
