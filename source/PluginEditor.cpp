@@ -9,8 +9,8 @@ PluginEditor::PluginEditor(PluginProcessor& p)
     setupSlider(rmsMinSlider_, rmsMinLabel_, "RMS Min");
     setupSlider(rmsMaxSlider_, rmsMaxLabel_, "RMS Max");
     setupSlider(curveSlider_, curveLabel_, "Curve");
-    setupSlider(downwardSlewSlider_, downwardSlewLabel_, "Down Slew");
-    setupSlider(upwardSlewSlider_, upwardSlewLabel_, "Up Slew");
+    setupSlider(downwardSlewSlider_, downwardSlewLabel_, "Release");
+    setupSlider(upwardSlewSlider_, upwardSlewLabel_, "Attack");
     setupSlider(minGainSlider_, minGainLabel_, "Min Gain");
     setupSlider(maxGainSlider_, maxGainLabel_, "Max Gain");
     setupSlider(rmsWindowSlider_, rmsWindowLabel_, "RMS Window");
@@ -53,15 +53,15 @@ void PluginEditor::resized()
     auto bottomRow = area;
     bottomRow.removeFromTop(labelHeight);
 
-    auto topSliderWidth = topRow.getWidth() / 4;
-    rmsMinSlider_.setBounds(topRow.removeFromLeft(topSliderWidth));
-    rmsMaxSlider_.setBounds(topRow.removeFromLeft(topSliderWidth));
-    minGainSlider_.setBounds(topRow.removeFromLeft(topSliderWidth));
-    maxGainSlider_.setBounds(topRow);
+    auto sliderWidth = topRow.getWidth() / 4;
 
-    auto bottomSliderWidth = bottomRow.getWidth() / 4;
-    curveSlider_.setBounds(bottomRow.removeFromLeft(bottomSliderWidth));
-    downwardSlewSlider_.setBounds(bottomRow.removeFromLeft(bottomSliderWidth));
-    upwardSlewSlider_.setBounds(bottomRow.removeFromLeft(bottomSliderWidth));
-    rmsWindowSlider_.setBounds(bottomRow);
+    rmsMinSlider_.setBounds(topRow.removeFromLeft(sliderWidth));
+    rmsMaxSlider_.setBounds(topRow.removeFromLeft(sliderWidth));
+    curveSlider_.setBounds(topRow.removeFromLeft(sliderWidth));
+    rmsWindowSlider_.setBounds(topRow);
+
+    minGainSlider_.setBounds(bottomRow.removeFromLeft(sliderWidth));
+    maxGainSlider_.setBounds(bottomRow.removeFromLeft(sliderWidth));
+    downwardSlewSlider_.setBounds(bottomRow.removeFromLeft(sliderWidth));
+    upwardSlewSlider_.setBounds(bottomRow);
 }

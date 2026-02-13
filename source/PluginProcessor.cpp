@@ -31,12 +31,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParam
     auto slewRange = juce::NormalisableRange<float>(100.0f, 50000.0f, 0.0f, 0.3f);
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        juce::ParameterID{"downwardSlew", 1}, "Down Slew",
+        juce::ParameterID{"downwardSlew", 1}, "Release",
         slewRange, 10000.0f,
         juce::AudioParameterFloatAttributes().withLabel("dB/s")));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        juce::ParameterID{"upwardSlew", 1}, "Up Slew",
+        juce::ParameterID{"upwardSlew", 1}, "Attack",
         slewRange, 10000.0f,
         juce::AudioParameterFloatAttributes().withLabel("dB/s")));
 
