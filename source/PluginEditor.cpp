@@ -24,7 +24,7 @@ PluginEditor::PluginEditor(PluginProcessor& p)
     maxGainAttachment_ = std::make_unique<SliderAttachment>(apvts, "maxGain", maxGainSlider_);
     rmsWindowAttachment_ = std::make_unique<SliderAttachment>(apvts, "rmsWindow", rmsWindowSlider_);
 
-    setSize(600, 400);
+    setSize(600, 500);
 }
 
 void PluginEditor::setupSlider(juce::Slider& slider, juce::Label& label, const juce::String& text)
@@ -47,10 +47,17 @@ void PluginEditor::paint(juce::Graphics& g)
 void PluginEditor::resized()
 {
     auto area = getLocalBounds().reduced(20);
+    auto gap = 40;
+    auto logoHeight = 160;
     auto labelHeight = 20;
-    auto topRow = area.removeFromTop(area.getHeight() / 2);
+    auto rowHeight = (area.getHeight() - logoHeight - 2 * gap) / 2;
+
+    area.removeFromTop(logoHeight);
+    auto topRow = area.removeFromTop(rowHeight);
     topRow.removeFromTop(labelHeight);
-    auto bottomRow = area;
+
+    area.removeFromTop(gap);
+    auto bottomRow = area.removeFromTop(rowHeight);
     bottomRow.removeFromTop(labelHeight);
 
     auto sliderWidth = topRow.getWidth() / 4;
